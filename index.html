@@ -1083,6 +1083,22 @@
         grid-template-columns: 1fr;
       }
     }
+/* --- Sunrise tweak: litt sterkere bakgrunn --- */
+:root {
+  /* bare oppdatere bakgrunnsfargene, resten er som før */
+  --bg-1: #ffe1f5;  /* mer rosa */
+  --bg-2: #ffcbe4;  /* sunrise pink */
+  --bg-3: #ffd0a8;  /* varm peach/gull */
+}
+
+/* litt mer glød rundt selve kortet */
+.app-shell {
+  background: rgba(255, 255, 255, 0.96);
+  background-image:
+    radial-gradient(circle at top left, rgba(255, 222, 245, 0.95), transparent 58%),
+    radial-gradient(circle at bottom right, rgba(255, 235, 210, 0.95), transparent 55%);
+}
+
   </style>
 </head>
 <body>
