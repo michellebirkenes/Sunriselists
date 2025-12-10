@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sunrise Lists</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- iOS web app -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <!-- App icon -->
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600&family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --bg-1: #ffe0ef;
+      --bg-2: #ffc7a0;
+      --bg-3: #ffd9e9;
+
+      --card: #ffffff;
+      --accent-rose: #ff84b6;
+      --accent-peach: #ffb37b;
+      --accent-gold: #f7b95a;
+
+      --accent-soft: #ffe3f3;
+
+      --text-main: #402322;
+      --text-soft: #8a6a73;
+      --text-soft-2: #b28f9a;
+
+      --border-soft: #f7d6df;
+      --shadow-soft: 0 18px 45px rgba(223, 151, 171, 0.35);
+
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 50% 15%, rgba(255, 246, 210, 0.9), transparent 60%),
+        radial-gradient(circle at 10% 80%, rgba(255, 187, 221, 0.9), transparent 60%),
+        radial-gradient(circle at 90% 75%, rgba(255, 191, 164, 0.9), transparent 55%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 18px 12px 30px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      background: radial-gradient(circle at top center, #ffeac3, #ffeef8 50%, #ffe7f4 100%);
+      border-radius: 36px;
+      box-shadow: var(--shadow-soft);
+      padding: 18px 16px 22px;
+      border: 1px solid rgba(255, 227, 239, 0.95);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app::before,
+    .app::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .app::before {
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(255, 238, 200, 0.9), transparent);
+      top: -150px;
+      right: -80px;
+      filter: blur(1px);
+    }
+
+    .app::after {
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(255, 183, 210, 0.9), transparent);
+      bottom: -160px;
+      left: -60px;
+      filter: blur(1px);
+    }
+
+    .sun-rays {
+      position: absolute;
+      top: -70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 480px;
+      height: 260px;
+      background:
+        conic-gradient(
+          from -30deg,
+          rgba(255, 238, 200, 0.95),
+          rgba(255, 210, 165, 0),
+          rgba(255, 232, 210, 0.95),
+          rgba(255, 238, 200, 0)
+        );
+      opacity: 0.7;
+      pointer-events: none;
+      filter: blur(4px);
+      mix-blend-mode: screen;
+    }
+
+    .app-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .headline {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .headline-title {
+      font-family: "Baloo 2", system-ui;
+      font-size: 1.6rem;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .headline-title span.emoji {
+      font-size: 1.6rem;
+      transform: translateY(1px);
+    }
+
+    .headline-sub {
+      font-size: 0.78rem;
+      padding: 4px 11px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(255, 225, 238, 0.95);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 8px 20px rgba(255, 190, 210, 0.7);
+    }
+
+    .headline-sub-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffd676, #ff9d5b);
+      box-shadow: 0 0 0 4px rgba(255, 215, 143, 0.5);
+    }
+
+    .date-pill {
+      font-size: 0.74rem;
+      padding: 7px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 224, 235, 0.95);
+      color: var(--text-soft-2);
+      align-self: center;
+      white-space: nowrap;
+      box-shadow: 0 8px 18px rgba(255, 214, 230, 0.6);
+    }
+
+    .top-tabs {
+      display: flex;
+      gap: 6px;
+      margin: 6px 2px 12px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 218, 230, 0.95);
+      background: rgba(255, 255, 255, 0.96);
+      padding: 6px 8px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 6px 14px rgba(255, 194, 214, 0.5);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #ffbddf, #ffb3c7, #ffb37b);
+      color: #4b2716;
+      box-shadow: 0 10px 24px rgba(237, 168, 171, 0.85);
+      border-color: transparent;
+    }
+
+    .tab-content.hidden {
+      display: none;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: var(--radius-xl);
+      padding: 13px 14px 13px;
+      border: 1px solid rgba(255, 228, 239, 0.95);
+      margin-bottom: 12px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 14px 32px rgba(228, 158, 190, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255, 234, 249, 0.95), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(255, 245, 219, 0.9), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .card-header-row h2 {
+      font-family: "Baloo 2", system-ui;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-header-row h2 span.emoji {
+      font-size: 1.25rem;
+    }
+
+    /* LISTS – oversikt */
+
+    .lists-overview {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .lists-empty-help {
+      font-size: 0.73rem;
+      color: var(--text-soft-2);
+      margin-top: 4px;
+    }
+
+    .list-row {
+      border-radius: 18px;
+      border: 1px solid rgba(255, 223, 239, 0.95);
+      background: linear-gradient(135deg, #fff7fd, #ffeef9);
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.8rem;
+      box-shadow: 0 10px 20px rgba(232, 164, 192, 0.5);
+    }
+
+    .list-row-emoji {
+      width: 32px;
+      height: 32px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      background: radial-gradient(circle at top left, #ffe9f5, #ffd2d6);
+      border: 1px solid rgba(255, 230, 241, 0.95);
+      box-shadow: 0 6px 14px rgba(225, 150, 175, 0.6);
+      flex-shrink: 0;
+    }
+
+    .list-row-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .list-row-title {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .list-row-meta {
+      font-size: 0.72rem;
+      color: var(--text-soft-2);
+    }
+
+    .list-row-counts {
+      font-size: 0.72rem;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 222, 236, 0.95);
+      color: #b3456f;
+      white-space: nowrap;
+    }
+
+    .lists-new-btn {
+      border-radius: var(--radius-pill);
+      border: none;
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ffc4e3, #ffb6c8, #ffb37b);
+      color: #4b2716;
+      box-shadow: 0 10px 22px rgba(237, 168, 171, 0.75);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lists-new-btn span:first-child {
+      font-size: 1rem;
+    }
+
+    .new-list-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .new-list-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .new-list-row input[type="text"] {
+      flex: 1;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      padding: 7px 10px;
+      font-size: 0.85rem;
+      background: #fff8fc;
+    }
+
+    .new-list-row input::placeholder {
+      color: #c59ab0;
+    }
+
+    .emoji-input-wrap {
+      width: 52px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      background: #fff8fc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      padding: 5px;
+    }
+
+    .emoji-input-wrap input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-size: 1.1rem;
+      outline: none;
+      padding: 0;
+    }
+
+    .new-list-form button {
+      align-self: flex-end;
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ffc4e3, #ffb6c8, #ffb37b);
+      color: #4b2716;
+      box-shadow: 0 10px 24px rgba(237, 168, 171, 0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .empty-state {
+      font-size: 0.73rem;
+      text-align: center;
+      padding: 7px 4px 3px;
+      color: var(--text-soft-2);
+    }
+
+    .empty-state span {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 2px;
+    }
+
+    /* LIST DETAIL */
+
+    #list-detail-card.hidden {
+      display: none !important;
+    }
+
+    .list-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .list-detail-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      background: radial-gradient(circle at top left, #ffe9f5, #ffd2d6);
+      border: 1px solid rgba(255, 230, 241, 0.95);
+      box-shadow: 0 8px 16px rgba(225, 150, 175, 0.7);
+      flex-shrink: 0;
+    }
+
+    .list-detail-title-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .list-detail-title {
+      font-family: "Baloo 2", system-ui;
+      font-size: 1rem;
+    }
+
+    .list-detail-sub {
+      font-size: 0.72rem;
+      color: var(--text-soft-2);
+    }
+
+    .list-detail-delete-btn {
+      border-radius: var(--radius-pill);
+      border: none;
+      padding: 4px 10px;
+      font-size: 0.74rem;
+      cursor: pointer;
+      background: #ffe0ea;
+      color: #b13a5f;
+    }
+
+    .note-detail-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .note-back-btn {
+      border-radius: var(--radius-pill);
+      border: none;
+      padding: 4px 10px;
+      font-size: 0.76rem;
+      cursor: pointer;
+      background: #ffeaf6;
+      color: #b3456f;
+      box-shadow: 0 6px 14px rgba(240, 172, 198, 0.6);
+    }
+
+    .note-detail-meta {
+      font-size: 0.72rem;
+      color: var(--text-soft-2);
+    }
+
+    .task-input-row {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 6px;
+    }
+
+    .task-input-row input[type="text"] {
+      flex: 1;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 220, 233, 0.95);
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      background: rgba(255, 250, 252, 0.98);
+    }
+
+    .task-input-row input::placeholder {
+      color: #cba0b0;
+    }
+
+    .task-input-row button {
+      border: none;
+      border-radius: 16px;
+      padding: 0 11px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ffc4e3, #ffb6c8, #ffb37b);
+      color: #4b2716;
+      box-shadow: 0 7px 18px rgba(237, 168, 171, 0.8);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .task-list {
+      list-style: none;
+      margin-top: 2px;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 2px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 214, 230, 0.9) transparent;
+    }
+
+    .task-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .task-list::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 214, 230, 0.9);
+      border-radius: 999px;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 7px;
+      border-radius: 16px;
+      background: rgba(255, 249, 252, 0.98);
+      border: 1px solid rgba(255, 227, 239, 0.95);
+      margin-bottom: 5px;
+      font-size: 0.8rem;
+    }
+
+    .task-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .task-text.completed {
+      text-decoration: line-through;
+      color: #c09f8f;
+    }
+
+    .task-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.68rem;
+      color: var(--text-soft-2);
+      margin-top: 2px;
+    }
+
+    .delete-btn {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.86rem;
+      padding: 3px;
+      border-radius: 999px;
+      color: #d18a9c;
+    }
+
+    .checkbox-wrap {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .checkbox-wrap input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .checkbox-custom {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 218, 232, 0.98);
+      background: rgba(255, 249, 252, 0.98);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: #ffffff;
+    }
+
+    .checkbox-wrap input:not(:checked) + .checkbox-custom::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: 1px dashed rgba(255, 216, 233, 0.98);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .checkbox-wrap input:checked + .checkbox-custom {
+      background: linear-gradient(135deg, #ffc4e3, #ffb6c8, #ffb37b);
+      border-color: transparent;
+      box-shadow: 0 6px 16px rgba(237, 168, 171, 0.95);
+    }
+
+    .checkbox-wrap input:checked + .checkbox-custom::before {
+      content: "✓";
+      font-size: 0.76rem;
+      margin-top: 1px;
+    }
+
+    /* COUNTDOWNS */
+
+    .card--new-countdown {
+      margin-bottom: 12px;
+    }
+
+    .new-countdown-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .new-countdown-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1.2fr 0.6fr;
+      gap: 6px;
+    }
+
+    .new-countdown-row input[type="text"],
+    .new-countdown-row input[type="date"] {
+      border-radius: 14px;
+      border: 1px solid #f7d6df;
+      padding: 6px 9px;
+      font-size: 0.8rem;
+      background: #fff8fc;
+    }
+
+    .new-countdown-form button {
+      align-self: flex-end;
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ffc4e3, #ffb6c8, #ffb37b);
+      color: #4b2716;
+      box-shadow: 0 10px 24px rgba(237, 168, 171, 0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .countdowns-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .countdown-card {
+      border-radius: 18px;
+      padding: 10px 11px;
+      background: linear-gradient(135deg, #ffc4e3, #ffb6c8, #ffb37b);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #4b2716;
+      box-shadow: 0 10px 24px rgba(237, 168, 171, 0.9);
+    }
+
+    .countdown-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .countdown-emoji {
+      width: 32px;
+      height: 32px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .countdown-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .countdown-date {
+      font-size: 0.75rem;
+      opacity: 0.85;
+    }
+
+    .countdown-right {
+      text-align: right;
+    }
+
+    .countdown-days {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .countdown-label {
+      font-size: 0.75rem;
+      opacity: 0.95;
+    }
+
+    /* NOTES */
+
+    .notes-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .notes-new-btn {
+      border-radius: var(--radius-pill);
+      border: none;
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ffc4e3, #ffb6c8, #ffb37b);
+      color: #4b2716;
+      box-shadow: 0 7px 16px rgba(237, 168, 171, 0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .note-row {
+      border-radius: 16px;
+      border: 1px solid rgba(255, 223, 239, 0.95);
+      background: #fff7fc;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .note-row-title {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .note-row-meta {
+      font-size: 0.7rem;
+      color: var(--text-soft-2);
+    }
+
+    .note-row-preview {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      margin-top: 2px;
+      line-height: 1.25;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .note-detail {
+      margin-top: 4px;
+    }
+
+    .note-detail.hidden {
+      display: none;
+    }
+
+    .note-detail-title {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid var(--border-soft);
+      padding: 4px 2px 6px;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: transparent;
+      outline: none;
+    }
+
+    .note-detail-body {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      min-height: 280px;
+      resize: vertical;
+      background: #fff8fc;
+      outline: none;
+      white-space: pre-wrap;
+    }
+
+    .note-detail-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .note-action-btn {
+      border-radius: var(--radius-pill);
+      border: none;
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    .note-save-btn {
+      background: linear-gradient(135deg, #ffc4e3, #ffb6c8, #ffb37b);
+      color: #4b2716;
+      box-shadow: 0 6px 16px rgba(237, 168, 171, 0.8);
+    }
+
+    .note-delete-btn {
+      background: #ffe0ea;
+      color: #b13a5f;
+    }
+
+    #notes-list-card.hidden {
+      display: none;
+    }
+
+    /* PRO TAB */
+
+    .pro-card {
+      position: relative;
+      overflow: hidden;
+      padding-top: 16px;
+    }
+
+    .pro-card::before {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffe6a9, rgba(255, 198, 220, 0.15));
+      top: -140px;
+      left: -60px;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .pro-card::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffb7d9, rgba(255, 227, 246, 0.1));
+      bottom: -160px;
+      right: -60px;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .pro-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .pro-hero {
+      text-align: left;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pro-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 220, 238, 0.95);
+      color: #d25c91;
+    }
+
+    .pro-badge::before {
+      content: "✨";
+    }
+
+    .pro-title {
+      font-family: "Baloo 2", system-ui;
+      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+      color: #3c1a24;
+    }
+
+    .pro-sub {
+      font-size: 0.8rem;
+      color: var(--text-soft-2);
+      max-width: 260px;
+    }
+
+    .pro-price-row {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .pro-price-main {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #3d2120;
+    }
+
+    .pro-price-main span {
+      font-size: 0.74rem;
+      font-weight: 400;
+      color: var(--text-soft-2);
+      margin-left: 4px;
+    }
+
+    .pro-price-sub {
+      font-size: 0.72rem;
+      color: var(--text-soft-2);
+    }
+
+    .pro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 10px 0 12px;
+    }
+
+    .pro-perk {
+      border-radius: 18px;
+      padding: 8px 9px;
+      background: rgba(255, 249, 252, 0.96);
+      border: 1px solid rgba(255, 223, 239, 0.95);
+      font-size: 0.76rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .pro-perk-title {
+      font-weight: 600;
+      color: #4b262a;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pro-perk-title span.emoji {
+      font-size: 1rem;
+    }
+
+    .pro-perk-text {
+      font-size: 0.72rem;
+      color: var(--text-soft-2);
+    }
+
+    .pro-note {
+      font-size: 0.72rem;
+      color: #ba7b8d;
+      margin-bottom: 8px;
+    }
+
+    .pro-cta-btn {
+      width: 100%;
+      border-radius: var(--radius-pill);
+      border: none;
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: default;
+      background: linear-gradient(135deg, #ffc4e3, #ffb6c8, #ffb37b);
+      color: #4b2716;
+      box-shadow: 0 8px 18px rgba(237, 168, 171, 0.9);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .pro-cta-btn span.emoji {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 430px) {
+      .app {
+        padding: 16px 12px 20px;
+        border-radius: 30px;
+      }
+
+      .headline-title {
+        font-size: 1.4rem;
+      }
+
+      .new-countdown-row {
+        grid-template-columns: 1.4fr 1.1fr 0.6fr;
+      }
+
+      .pro-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="sun-rays"></div>
+    <div class="app-inner">
+      <header>
+        <div class="headline">
+          <div class="headline-title">
+            <span>Sunrise Lists</span>
+            <span class="emoji">☀️</span>
+          </div>
+          <div class="headline-sub">
+            <span class="headline-sub-dot"></span>
+            <span>Soft mornings, clear plans</span>
+          </div>
+        </div>
+        <div class="date-pill" id="date-pill"></div>
+      </header>
+
+      <nav class="top-tabs">
+        <button class="tab-btn active" data-tab="lists">📝 Lists</button>
+        <button class="tab-btn" data-tab="countdowns">⏳ Countdowns</button>
+        <button class="tab-btn" data-tab="notes">✍️ Notes</button>
+        <button class="tab-btn" data-tab="pro">✨ Pro</button>
+      </nav>
+
+      <!-- LISTS TAB -->
+      <div class="tab-content" id="tab-lists">
+        <!-- Overview card -->
+        <section class="card" id="lists-overview-card">
+          <div class="card-header-row">
+            <h2><span class="emoji">📝</span><span>Lists</span></h2>
+            <button class="lists-new-btn" id="lists-new-btn">
+              <span>＋</span><span>New list</span>
+            </button>
+          </div>
+
+          <form class="new-list-form" id="new-list-form">
+            <div class="new-list-row">
+              <input
+                type="text"
+                id="new-list-title"
+                placeholder="List name, e.g. “Today”, “This week”…"
+                autocomplete="off"
+              />
+              <div class="emoji-input-wrap">
+                <input
+                  type="text"
+                  id="new-list-emoji"
+                  placeholder="💛"
+                  maxlength="3"
+                />
+              </div>
+            </div>
+            <button type="submit">
+              <span class="icon">+</span>
+              <span>Create list</span>
+            </button>
+          </form>
+
+          <div class="lists-overview" id="lists-overview"></div>
+          <div class="lists-empty-help" id="lists-empty-help"></div>
+        </section>
+
+        <!-- Single list detail "page" -->
+        <section class="card hidden" id="list-detail-card">
+          <div class="note-detail-top">
+            <button class="note-back-btn" id="list-back-btn">← Back to lists</button>
+            <div class="note-detail-meta" id="list-detail-meta"></div>
+          </div>
+
+          <div class="list-detail-header">
+            <div class="list-detail-avatar" id="list-detail-emoji">💛</div>
+            <div class="list-detail-title-wrap">
+              <div class="list-detail-title" id="list-detail-title">My list</div>
+              <div class="list-detail-sub" id="list-detail-sub"></div>
+            </div>
+            <button class="list-detail-delete-btn" id="list-detail-delete-btn">
+              Delete
+            </button>
+          </div>
+
+          <form class="task-input-row" id="list-detail-task-form">
+            <input
+              type="text"
+              id="detail-task-input"
+              placeholder="Add a task to this list…"
+              autocomplete="off"
+            />
+            <button type="submit">
+              <span>+</span><span>Add</span>
+            </button>
+          </form>
+
+          <ul class="task-list" id="list-detail-tasks"></ul>
+        </section>
+      </div>
+
+      <!-- COUNTDOWNS TAB -->
+      <div class="tab-content hidden" id="tab-countdowns">
+        <section class="card card--new-countdown">
+          <div class="card-header-row">
+            <h2><span class="emoji">⏳</span><span>New countdown</span></h2>
+          </div>
+          <form id="new-countdown-form" class="new-countdown-form">
+            <div class="new-countdown-row">
+              <input
+                type="text"
+                id="cd-title"
+                placeholder="What are you counting down to?"
+                autocomplete="off"
+              />
+              <input type="date" id="cd-date" />
+              <input
+                type="text"
+                id="cd-emoji"
+                placeholder="✨"
+                maxlength="3"
+              />
+            </div>
+            <button type="submit">
+              <span>+</span>
+              <span>Add countdown</span>
+            </button>
+          </form>
+        </section>
+
+        <section class="countdowns-list" id="countdowns-list"></section>
+      </div>
+
+      <!-- NOTES TAB -->
+      <div class="tab-content hidden" id="tab-notes">
+        <section class="card" id="notes-list-card">
+          <div class="card-header-row">
+            <h2><span class="emoji">✍️</span><span>Notes</span></h2>
+            <div class="notes-header-actions">
+              <button class="notes-new-btn" id="notes-new-btn">
+                <span>＋</span><span>New note</span>
+              </button>
+            </div>
+          </div>
+          <div class="notes-list" id="notes-list"></div>
+        </section>
+
+        <section class="card note-detail hidden" id="note-detail">
+          <div class="note-detail-top">
+            <button class="note-back-btn" id="note-back-btn">← Back to notes</button>
+            <div class="note-detail-meta" id="note-detail-meta"></div>
+          </div>
+          <input
+            type="text"
+            id="note-detail-title"
+            class="note-detail-title"
+            placeholder="Title"
+          />
+          <textarea
+            id="note-detail-body"
+            class="note-detail-body"
+            placeholder="Write your note here…"
+          ></textarea>
+          <div class="note-detail-actions">
+            <button class="note-action-btn note-delete-btn" id="note-delete-btn">
+              Delete
+            </button>
+            <button class="note-action-btn note-save-btn" id="note-save-btn">
+              Save
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <!-- PRO TAB -->
+      <div class="tab-content hidden" id="tab-pro">
+        <section class="card pro-card">
+          <div class="pro-inner">
+            <div class="pro-hero">
+              <div class="pro-badge">Sunrise Pro</div>
+              <div class="pro-title">More sunshine for your planning</div>
+              <div class="pro-sub">
+                A cozy upgrade with more lists, more color and more space for your brain.
+              </div>
+              <div class="pro-price-row">
+                <div class="pro-price-main">
+                  79 kr<span>/ year</span>
+                </div>
+                <div class="pro-price-sub">
+                  (Future idea – for when Sunrise goes to the App Store ✨)
+                </div>
+              </div>
+            </div>
+
+            <div class="pro-grid">
+              <div class="pro-perk">
+                <div class="pro-perk-title">
+                  <span class="emoji">🧺</span>
+                  <span>Unlimited lists</span>
+                </div>
+                <div class="pro-perk-text">
+                  Separate life, school, work, and dreams into as many cute lists as you like.
+                </div>
+              </div>
+
+              <div class="pro-perk">
+                <div class="pro-perk-title">
+                  <span class="emoji">🎨</span>
+                  <span>Premium themes</span>
+                </div>
+                <div class="pro-perk-text">
+                  Sunrise Gold, Pink Cloud, Lilac Glow and more soft palettes to match your phone.
+                </div>
+              </div>
+
+              <div class="pro-perk">
+                <div class="pro-perk-title">
+                  <span class="emoji">📅</span>
+                  <span>Widget magic</span>
+                </div>
+                <div class="pro-perk-text">
+                  Medium & large widgets that show your to-dos right on the home screen.
+                </div>
+              </div>
+
+              <div class="pro-perk">
+                <div class="pro-perk-title">
+                  <span class="emoji">🩷</span>
+                  <span>Notes & countdowns</span>
+                </div>
+                <div class="pro-perk-text">
+                  Extra space for notes, events and little things you’re excited about.
+                </div>
+              </div>
+            </div>
+
+            <div class="pro-note">
+              This is just the cozy preview of Sunrise Pro – later, when you go full iOS app,
+              this screen can be where people actually subscribe.
+            </div>
+
+            <button class="pro-cta-btn">
+              <span class="emoji">🌅</span>
+              <span>Sunrise Pro is coming in the native app version</span>
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "sunriseLists_v1";
+    const CD_STORAGE_KEY = "sunriseCountdowns_v1";
+    const NOTES_KEY = "sunriseNotes_v1";
+
+    let lists = [];
+    let countdowns = [];
+    let notes = [];
+    let currentNoteId = null;
+    let currentListId = null;
+
+    function formatDateLabel(date) {
+      const options = { weekday: "short", day: "numeric", month: "short" };
+      return date.toLocaleDateString(undefined, options);
+    }
+
+    function formatTime(date) {
+      return date.toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    /* LISTS */
+
+    function loadLists() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (!stored) return;
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) lists = parsed;
+      } catch (e) {
+        console.error("Error parsing lists", e);
+      }
+    }
+
+    function saveLists() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(lists));
+    }
+
+    function addList(title, emoji) {
+      const now = new Date();
+      const normalizedEmoji = emoji && emoji.trim() ? emoji.trim() : "💛";
+
+      const list = {
+        id: "list-" + Date.now().toString(),
+        title: title.trim(),
+        emoji: normalizedEmoji,
+        createdAt: now.toISOString(),
+        tasks: [],
+      };
+      lists.push(list);
+      saveLists();
+      renderAllLists();
+    }
+
+    function deleteList(listId) {
+      lists = lists.filter((l) => l.id !== listId);
+      saveLists();
+      if (currentListId === listId) {
+        currentListId = null;
+        showListDetail(false);
+      }
+      renderAllLists();
+    }
+
+    function addTaskToList(listId, text) {
+      const list = lists.find((l) => l.id === listId);
+      if (!list) return;
+      const now = new Date();
+      const task = {
+        id:
+          "task-" +
+          Date.now().toString() +
+          "-" +
+          Math.random().toString(16).slice(2),
+        text: text.trim(),
+        completed: false,
+        createdAt: now.toISOString(),
+        createdAtLabel: `added at ${formatTime(now)}`,
+      };
+      list.tasks.unshift(task);
+      saveLists();
+      renderAllLists();
+    }
+
+    function toggleTask(listId, taskId, completed) {
+      const list = lists.find((l) => l.id === listId);
+      if (!list) return;
+      const task = list.tasks.find((t) => t.id === taskId);
+      if (!task) return;
+      task.completed = completed;
+      saveLists();
+      renderAllLists();
+    }
+
+    function deleteTask(listId, taskId) {
+      const list = lists.find((l) => l.id === listId);
+      if (!list) return;
+      list.tasks = list.tasks.filter((t) => t.id !== taskId);
+      saveLists();
+      renderAllLists();
+    }
+
+    function getListCounts(list) {
+      const total = list.tasks.length;
+      const active = list.tasks.filter((t) => !t.completed).length;
+      const done = total - active;
+      return { total, active, done };
+    }
+
+    function renderListsOverview() {
+      const container = document.getElementById("lists-overview");
+      const help = document.getElementById("lists-empty-help");
+      container.innerHTML = "";
+      help.textContent = "";
+
+      if (!lists.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.innerHTML = "<span>☀️</span>No lists yet – create your first one above";
+        container.appendChild(empty);
+        return;
+      }
+
+      lists
+        .slice()
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .forEach((list) => {
+          const { total, active } = getListCounts(list);
+
+          const row = document.createElement("button");
+          row.type = "button";
+          row.className = "list-row";
+
+          const emoji = document.createElement("div");
+          emoji.className = "list-row-emoji";
+          emoji.textContent = list.emoji || "💛";
+
+          const main = document.createElement("div");
+          main.className = "list-row-main";
+
+          const title = document.createElement("div");
+          title.className = "list-row-title";
+          title.textContent = list.title;
+
+          const meta = document.createElement("div");
+          meta.className = "list-row-meta";
+
+          if (!total) {
+            meta.textContent = "No tasks yet";
+          } else if (!active) {
+            meta.textContent = `${total} done ✨`;
+          } else {
+            meta.textContent = `${active} left · ${total} total`;
+          }
+
+          main.appendChild(title);
+          main.appendChild(meta);
+
+          const counts = document.createElement("div");
+          counts.className = "list-row-counts";
+          if (!total) {
+            counts.textContent = "fresh start";
+          } else if (!active) {
+            counts.textContent = "all done";
+          } else {
+            counts.textContent = `${active} left`;
+          }
+
+          row.appendChild(emoji);
+          row.appendChild(main);
+          row.appendChild(counts);
+
+          row.addEventListener("click", () => {
+            openListDetail(list.id);
+          });
+
+          container.appendChild(row);
+        });
+    }
+
+    function renderListDetailTasks(list) {
+      const ul = document.getElementById("list-detail-tasks");
+      ul.innerHTML = "";
+
+      if (!list.tasks.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.innerHTML =
+          "<span>🌸</span>No tasks yet – add your first one for this list";
+        ul.appendChild(empty);
+        return;
+      }
+
+      list.tasks
+        .slice()
+        .sort((a, b) => Number(a.completed) - Number(b.completed))
+        .forEach((task) => {
+          const li = document.createElement("li");
+          li.className = "task";
+
+          const checkboxWrap = document.createElement("label");
+          checkboxWrap.className = "checkbox-wrap";
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = !!task.completed;
+
+          checkbox.addEventListener("change", () => {
+            toggleTask(list.id, task.id, checkbox.checked);
+          });
+
+          const custom = document.createElement("span");
+          custom.className = "checkbox-custom";
+
+          checkboxWrap.appendChild(checkbox);
+          checkboxWrap.appendChild(custom);
+
+          const main = document.createElement("div");
+          main.className = "task-main";
+
+          const textEl = document.createElement("div");
+          textEl.className = "task-text";
+          textEl.textContent = task.text;
+          if (task.completed) textEl.classList.add("completed");
+
+          const footer = document.createElement("div");
+          footer.className = "task-footer";
+
+          const time = document.createElement("div");
+          time.className = "task-time";
+          time.textContent = task.createdAtLabel || "";
+
+          const actions = document.createElement("div");
+          actions.className = "task-actions";
+
+          const deleteBtnTask = document.createElement("button");
+          deleteBtnTask.className = "delete-btn";
+          deleteBtnTask.innerHTML = "✕";
+          deleteBtnTask.addEventListener("click", () => {
+            deleteTask(list.id, task.id);
+          });
+
+          actions.appendChild(deleteBtnTask);
+          footer.appendChild(time);
+          footer.appendChild(actions);
+
+          main.appendChild(textEl);
+          main.appendChild(footer);
+
+          li.appendChild(checkboxWrap);
+          li.appendChild(main);
+
+          ul.appendChild(li);
+        });
+    }
+
+    function showListDetail(show) {
+      const overview = document.getElementById("lists-overview-card");
+      const detail = document.getElementById("list-detail-card");
+      detail.classList.toggle("hidden", !show);
+      overview.classList.toggle("hidden", show);
+      if (show) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function openListDetail(id) {
+      currentListId = id;
+      const list = lists.find((l) => l.id === id);
+      if (!list) {
+        showListDetail(false);
+        return;
+      }
+
+      const metaEl = document.getElementById("list-detail-meta");
+      const emojiEl = document.getElementById("list-detail-emoji");
+      const titleEl = document.getElementById("list-detail-title");
+      const subEl = document.getElementById("list-detail-sub");
+
+      const { total, active } = getListCounts(list);
+      const created = new Date(list.createdAt);
+      metaEl.textContent = "Created " + formatDateLabel(created);
+
+      emojiEl.textContent = list.emoji || "💛";
+      titleEl.textContent = list.title;
+
+      if (!total) {
+        subEl.textContent = "No tasks yet";
+      } else if (!active) {
+        subEl.textContent = `${total} done ✨`;
+      } else {
+        subEl.textContent = `${active} left · ${total} total`;
+      }
+
+      renderListDetailTasks(list);
+      showListDetail(true);
+    }
+
+    function renderAllLists() {
+      renderListsOverview();
+      if (currentListId) {
+        const exists = lists.some((l) => l.id === currentListId);
+        if (exists) {
+          const list = lists.find((l) => l.id === currentListId);
+          if (list) {
+            const { total, active } = getListCounts(list);
+            const subEl = document.getElementById("list-detail-sub");
+            if (!total) subEl.textContent = "No tasks yet";
+            else if (!active) subEl.textContent = `${total} done ✨`;
+            else subEl.textContent = `${active} left · ${total} total`;
+            renderListDetailTasks(list);
+          }
+        } else {
+          showListDetail(false);
+          currentListId = null;
+        }
+      }
+    }
+
+    /* COUNTDOWNS */
+
+    function loadCountdowns() {
+      const stored = localStorage.getItem(CD_STORAGE_KEY);
+      if (!stored) return;
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) countdowns = parsed;
+      } catch (e) {
+        console.error("Error parsing countdowns", e);
+      }
+    }
+
+    function saveCountdowns() {
+      localStorage.setItem(CD_STORAGE_KEY, JSON.stringify(countdowns));
+    }
+
+    function daysDiff(targetISO) {
+      const now = new Date();
+      const target = new Date(targetISO);
+      const msDay = 1000 * 60 * 60 * 24;
+      return Math.floor((target - now) / msDay);
+    }
+
+    function renderCountdowns() {
+      const container = document.getElementById("countdowns-list");
+      container.innerHTML = "";
+
+      if (!countdowns.length) {
+        const empty = document.createElement("div");
+        empty.style.fontSize = "0.8rem";
+        empty.style.color = "#b28f9a";
+        empty.textContent = "Ingen countdowns ennå – lag din første ✨";
+        container.appendChild(empty);
+        return;
+      }
+
+      countdowns
+        .slice()
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .forEach((cd) => {
+          const diff = daysDiff(cd.date);
+
+          const card = document.createElement("article");
+          card.className = "countdown-card";
+
+          const left = document.createElement("div");
+          left.className = "countdown-left";
+
+          const emoji = document.createElement("div");
+          emoji.className = "countdown-emoji";
+          emoji.textContent = cd.emoji || "✨";
+
+          const textWrap = document.createElement("div");
+          const title = document.createElement("div");
+          title.className = "countdown-title";
+          title.textContent = cd.title;
+
+          const date = document.createElement("div");
+          date.className = "countdown-date";
+          date.textContent = new Date(cd.date).toLocaleDateString();
+
+          textWrap.appendChild(title);
+          textWrap.appendChild(date);
+
+          left.appendChild(emoji);
+          left.appendChild(textWrap);
+
+          const right = document.createElement("div");
+          right.className = "countdown-right";
+
+          const days = document.createElement("div");
+          days.className = "countdown-days";
+          days.textContent = Math.abs(diff);
+
+          const label = document.createElement("div");
+          label.className = "countdown-label";
+          label.textContent = diff >= 0 ? "dager igjen" : "dager siden";
+
+          right.appendChild(days);
+          right.appendChild(label);
+
+          card.appendChild(left);
+          card.appendChild(right);
+          container.appendChild(card);
+        });
+    }
+
+    /* NOTES */
+
+    function loadNotes() {
+      const stored = localStorage.getItem(NOTES_KEY);
+      if (!stored) return;
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) notes = parsed;
+      } catch (e) {
+        console.error("Error parsing notes", e);
+      }
+    }
+
+    function saveNotes() {
+      localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+    }
+
+    function renderNotesList() {
+      const container = document.getElementById("notes-list");
+      container.innerHTML = "";
+
+      if (!notes.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.innerHTML =
+          "<span>🩷</span>No notes yet – write your first thoughts";
+        container.appendChild(empty);
+        return;
+      }
+
+      notes
+        .slice()
+        .sort(
+          (a, b) =>
+            new Date(b.updatedAt || b.createdAt) -
+            new Date(a.updatedAt || a.createdAt)
+        )
+        .forEach((note) => {
+          const row = document.createElement("button");
+          row.type = "button";
+          row.className = "note-row";
+
+          const title = document.createElement("div");
+          title.className = "note-row-title";
+          title.textContent = note.title || "Untitled";
+
+          const meta = document.createElement("div");
+          meta.className = "note-row-meta";
+          const d = new Date(note.updatedAt || note.createdAt);
+          meta.textContent = formatDateLabel(d);
+
+          const preview = document.createElement("div");
+          preview.className = "note-row-preview";
+          preview.textContent = (note.body || "").replace(/\s+/g, " ");
+
+          row.appendChild(title);
+          row.appendChild(meta);
+          if (note.body) row.appendChild(preview);
+
+          row.addEventListener("click", () => {
+            openNoteDetail(note.id);
+          });
+
+          container.appendChild(row);
+        });
+    }
+
+    function showNoteDetail(show) {
+      const detail = document.getElementById("note-detail");
+      const listCard = document.getElementById("notes-list-card");
+
+      detail.classList.toggle("hidden", !show);
+      if (listCard) listCard.classList.toggle("hidden", show);
+
+      if (show) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function openNoteDetail(id) {
+      currentNoteId = id || null;
+
+      const titleInput = document.getElementById("note-detail-title");
+      const bodyInput = document.getElementById("note-detail-body");
+      const metaEl = document.getElementById("note-detail-meta");
+
+      if (!currentNoteId) {
+        titleInput.value = "";
+        bodyInput.value = "";
+        metaEl.textContent = "New note";
+      } else {
+        const note = notes.find((n) => n.id === currentNoteId);
+        if (!note) return;
+        titleInput.value = note.title || "";
+        bodyInput.value = note.body || "";
+        const d = new Date(note.updatedAt || note.createdAt);
+        metaEl.textContent = "Last updated " + formatDateLabel(d);
+      }
+
+      showNoteDetail(true);
+    }
+
+    function closeNoteDetail() {
+      currentNoteId = null;
+      showNoteDetail(false);
+    }
+
+    function saveCurrentNote() {
+      const titleInput = document.getElementById("note-detail-title");
+      const bodyInput = document.getElementById("note-detail-body");
+      const title = titleInput.value.trim();
+      const body = bodyInput.value.trim();
+      const now = new Date().toISOString();
+
+      if (!title && !body) {
+        closeNoteDetail();
+        return;
+      }
+
+      if (currentNoteId) {
+        const note = notes.find((n) => n.id === currentNoteId);
+        if (note) {
+          note.title = title || "Untitled";
+          note.body = body;
+          note.updatedAt = now;
+        }
+      } else {
+        const note = {
+          id: "note-" + Date.now().toString(),
+          title: title || "Untitled",
+          body,
+          createdAt: now,
+          updatedAt: now,
+        };
+        notes.unshift(note);
+      }
+
+      saveNotes();
+      renderNotesList();
+      closeNoteDetail();
+    }
+
+    function deleteCurrentNote() {
+      if (!currentNoteId) {
+        closeNoteDetail();
+        return;
+      }
+      const note = notes.find((n) => n.id === currentNoteId);
+      if (note && !confirm(`Delete the note “${note.title}”?`)) return;
+
+      notes = notes.filter((n) => n.id !== currentNoteId);
+      saveNotes();
+      renderNotesList();
+      closeNoteDetail();
+    }
+
+    /* TABS + INIT */
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const dateEl = document.getElementById("date-pill");
+      dateEl.textContent = formatDateLabel(new Date());
+
+      // Lists
+      loadLists();
+      renderAllLists();
+      showListDetail(false);
+
+      const newListForm = document.getElementById("new-list-form");
+      const newListTitle = document.getElementById("new-list-title");
+      const newListEmoji = document.getElementById("new-list-emoji");
+
+      newListForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const title = newListTitle.value.trim();
+        const emoji = newListEmoji.value.trim();
+        if (!title) {
+          newListTitle.focus();
+          return;
+        }
+        addList(title, emoji);
+        newListTitle.value = "";
+        newListEmoji.value = "";
+      });
+
+      document
+        .getElementById("lists-new-btn")
+        .addEventListener("click", () => {
+          newListTitle.focus();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+      document
+        .getElementById("list-back-btn")
+        .addEventListener("click", () => {
+          currentListId = null;
+          showListDetail(false);
+        });
+
+      document
+        .getElementById("list-detail-delete-btn")
+        .addEventListener("click", () => {
+          if (!currentListId) return;
+          const list = lists.find((l) => l.id === currentListId);
+          if (list && !confirm(`Delete the list “${list.title}”?`)) return;
+          deleteList(currentListId);
+        });
+
+      const listDetailForm = document.getElementById("list-detail-task-form");
+      const detailTaskInput = document.getElementById("detail-task-input");
+
+      listDetailForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!currentListId) return;
+        const text = detailTaskInput.value.trim();
+        if (!text) {
+          detailTaskInput.focus();
+          return;
+        }
+        addTaskToList(currentListId, text);
+        detailTaskInput.value = "";
+      });
+
+      // Countdowns
+      loadCountdowns();
+      renderCountdowns();
+
+      const cdForm = document.getElementById("new-countdown-form");
+      const cdTitle = document.getElementById("cd-title");
+      const cdDate = document.getElementById("cd-date");
+      const cdEmoji = document.getElementById("cd-emoji");
+
+      cdForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const title = cdTitle.value.trim();
+        const date = cdDate.value;
+        const emoji = cdEmoji.value.trim();
+        if (!title || !date) return;
+
+        countdowns.push({
+          id: "cd-" + Date.now().toString(),
+          title,
+          date,
+          emoji: emoji || "✨",
+        });
+
+        saveCountdowns();
+        renderCountdowns();
+        cdTitle.value = "";
+        cdDate.value = "";
+        cdEmoji.value = "";
+      });
+
+      // Notes
+      loadNotes();
+      renderNotesList();
+      showNoteDetail(false);
+
+      document
+        .getElementById("notes-new-btn")
+        .addEventListener("click", () => openNoteDetail(null));
+      document
+        .getElementById("note-back-btn")
+        .addEventListener("click", closeNoteDetail);
+      document
+        .getElementById("note-save-btn")
+        .addEventListener("click", saveCurrentNote);
+      document
+        .getElementById("note-delete-btn")
+        .addEventListener("click", deleteCurrentNote);
+
+      // Tabs
+      const tabButtons = document.querySelectorAll(".tab-btn");
+      const tabLists = document.getElementById("tab-lists");
+      const tabCountdowns = document.getElementById("tab-countdowns");
+      const tabNotes = document.getElementById("tab-notes");
+      const tabPro = document.getElementById("tab-pro");
+
+      function setActiveTab(tabName, updateHash = true) {
+        const valid = ["lists", "countdowns", "notes", "pro"];
+        let tab = valid.includes(tabName) ? tabName : "lists";
+
+        tabLists.classList.add("hidden");
+        tabCountdowns.classList.add("hidden");
+        tabNotes.classList.add("hidden");
+        tabPro.classList.add("hidden");
+
+        if (tab === "lists") tabLists.classList.remove("hidden");
+        if (tab === "countdowns") tabCountdowns.classList.remove("hidden");
+        if (tab === "notes") tabNotes.classList.remove("hidden");
+        if (tab === "pro") tabPro.classList.remove("hidden");
+
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        const btn = document.querySelector(`.tab-btn[data-tab="${tab}"]`);
+        if (btn) btn.classList.add("active");
+
+        if (updateHash) {
+          window.location.hash = "#" + tab;
+        }
+      }
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const tab = btn.dataset.tab;
+          setActiveTab(tab, true);
+        });
+      });
+
+      function applyHashTab() {
+        const hash = window.location.hash.replace("#", "");
+        setActiveTab(hash || "lists", false);
+      }
+
+      window.addEventListener("hashchange", applyHashTab);
+      applyHashTab();
+    });
+  </script>
+</body>
+</html>
